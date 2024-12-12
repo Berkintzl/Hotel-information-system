@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<GridPane fx:controller="controller.OwnerPanelController"
+          xmlns:fx="http://javafx.com/fxml"
+          alignment="center" hgap="10" vgap="10" stylesheets="@/css/modern.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <Text text="Owner Panel" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" styleClass="header-large"/>
+
+    <!-- Client TableView -->
+    <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <Text text="Clients" styleClass="header-middle"/>
+        <TableView fx:id="clientTableView" prefWidth="400">
+            <columns>
+                <TableColumn fx:id="clientIdColumn" text="Client ID" prefWidth="100"/>
+                <TableColumn fx:id="clientNameColumn" text="Name" prefWidth="150"/>
+                <TableColumn fx:id="clientEmailColumn" text="Email" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Client Rating TableView -->
+    <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <Text text="Client Ratings" styleClass="header-middle"/>
+        <TableView fx:id="clientRatingTableView" prefWidth="400">
+            <columns>
+                <TableColumn fx:id="ratingIdColumn" text="Rating ID" prefWidth="100"/>
+                <TableColumn fx:id="ratingClientIdColumn" text="Client ID" prefWidth="150"/>
+                <TableColumn fx:id="ratingColumn" text="Rating" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Additional Service TableView -->
+    <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+        <Text text="Additional Services" styleClass="header-middle"/>
+        <TableView fx:id="additionalServiceTableView" prefWidth="800">
+            <columns>
+                <TableColumn fx:id="serviceTypeColumn" text="Service Type" prefWidth="250"/>
+                <TableColumn fx:id="seasonColumn" text="Season" prefWidth="250"/>
+                <TableColumn fx:id="usageCountColumn" text="Usage Count" prefWidth="250"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Create Hotel with Manager Fields and Button -->
+    <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+        <Text text="Create Manager" styleClass="header-middle"/>
+        <TextField fx:id="usernameField" promptText="Username"/>
+        <PasswordField fx:id="passwordField" promptText="Password"/>
+        <Button text="Create Manager" onAction="#handleCreateManager"/>
+    </VBox>
+
+
+    <Button text="Back" onAction="#handleGoBack" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+</GridPane>
