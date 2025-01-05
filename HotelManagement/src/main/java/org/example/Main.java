@@ -21,12 +21,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml")); 
+
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
             Scene scene = new Scene(root);
             primaryStage.setTitle("Hotel Management System Login");
             primaryStage.setScene(scene);
             primaryStage.show();
 
+            // Bildirimler için zamanlayıcı başlatma
             Connection connection = DatabaseConnection.getConnection();
             NotificationService notificationService = new NotificationService(new NotificationDAO(connection), new ReservationDAO(connection));
             NotificationService.NotificationScheduler scheduler = new NotificationService.NotificationScheduler(notificationService);

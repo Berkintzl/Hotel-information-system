@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fx:controller="controller.AdditionalServiceController"
+            fitToWidth="true" maxHeight="700"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@/css/modern.css">
+    <VBox spacing="15" styleClass="main-container">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Header -->
+        <Text text="Additional Service Panel" styleClass="header-large"/>
+
+        <!-- Form Container -->
+        <VBox spacing="15" styleClass="form-container">
+            <Text text="Create Additional Service" styleClass="header-middle"/>
+            <GridPane hgap="10" vgap="10">
+                <Label text="Service Type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="serviceTypeField" styleClass="modern-text-field"
+                           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Season:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="seasonField" styleClass="modern-text-field"
+                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Usage Count:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="usageCountField" styleClass="modern-text-field"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <Button text="Create Additional Service"
+                    onAction="#handleCreateAdditionalService"
+                    styleClass="primary-button"/>
+        </VBox>
+
+        <!-- Navigation -->
+        <HBox alignment="BOTTOM_RIGHT">
+            <Button text="Back" onAction="#handleGoBack" styleClass="secondary-button"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fx:controller="controller.AdminController"
+            fitToWidth="true" maxHeight="700"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@/css/modern.css">
+    <VBox spacing="15" styleClass="main-container">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Header -->
+        <Text text="Admin Panel" styleClass="header-large"/>
+
+        <!-- Main Content - Side by Side Panels -->
+        <HBox spacing="20">
+            <!-- Left Panel - Hotel Owner Creation -->
+            <VBox spacing="15" styleClass="form-container" HBox.hgrow="ALWAYS">
+                <Text text="Create Hotel Owner" styleClass="header-middle"/>
+                <GridPane hgap="10" vgap="10">
+                    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="usernameField" styleClass="modern-text-field"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <PasswordField fx:id="passwordField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Hotel Name:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="hotelNameField" styleClass="modern-text-field"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                    <Label text="Hotel Address:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <TextField fx:id="hotelAddressField" styleClass="modern-text-field"
+                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                </GridPane>
+                <Button text="Create Owner" onAction="#handleCreateOwner"
+                        styleClass="primary-button"/>
+            </VBox>
+
+            <!-- Right Panel - Room Management -->
+            <VBox spacing="15" styleClass="form-container" HBox.hgrow="ALWAYS">
+                <Text text="Room Management" styleClass="header-middle"/>
+
+                <!-- Hotel Selection -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Select Hotel:"/>
+                    <ComboBox fx:id="hotelComboBox" onAction="#handleHotelSelection"
+                              styleClass="modern-text-field" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- Add Room Section -->
+                <VBox spacing="10">
+                    <Text text="Add New Room" styleClass="header-middle"/>
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="Room Number:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="roomNumberField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Room Category:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="roomCategoryComboBox" styleClass="modern-text-field"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+                    <Button text="Add Room" onAction="#handleAddRoom"
+                            styleClass="primary-button"/>
+                </VBox>
+
+                <!-- Delete Room Section -->
+                <VBox spacing="10">
+                    <Text text="Delete Room" styleClass="header-middle"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Select Room:"/>
+                        <ComboBox fx:id="existingRoomsComboBox" styleClass="modern-text-field"
+                                  HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <Button text="Delete Room" onAction="#handleDeleteRoom"
+                            styleClass="warning-button"/>
+                </VBox>
+            </VBox>
+        </HBox>
+
+        <!-- Navigation -->
+        <HBox alignment="BOTTOM_RIGHT">
+            <Button text="Back" onAction="#handleGoBack" styleClass="secondary-button"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<ScrollPane fx:controller="controller.ReceptionistPanelController"
+            fitToWidth="true" maxHeight="700"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@/css/modern.css">
+    <VBox spacing="15" styleClass="main-container">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Text text="Receptionist Panel" styleClass="header-large"/>
+
+        <HBox spacing="20">
+            <VBox spacing="15">
+                <VBox spacing="10" styleClass="form-container">
+                    <Text text="Client Information" styleClass="header-middle"/>
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="Client Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="clientNameField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Client Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="clientEmailField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Reservation Number:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="reservationNumberField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label text="Room Number:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <TextField fx:id="roomNumberField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        <Label text="Room Category:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <ComboBox fx:id="roomCategoryComboBox" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Single"/>
+                                    <String fx:value="Double"/>
+                                    <String fx:value="Suite"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+
+                        <Label text="Start Date:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                        <Label text="End Date:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <DatePicker fx:id="endDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                    </GridPane>
+
+                    <Button text="Create Client and Reservation"
+                            onAction="#handleCreateClientAndReservation"
+                            styleClass="primary-button"/>
+                </VBox>
+
+                <VBox spacing="10" styleClass="form-container">
+                    <Text text="Cancel Reservation" styleClass="header-middle"/>
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="Reservation Number:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="reservationNumberToCancelField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Cancellation Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="cancellationTypeField" styleClass="modern-text-field"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+                    <Button text="Cancel Reservation"
+                            onAction="#handleCancelReservation"
+                            styleClass="secondary-button"/>
+                </VBox>
+            </VBox>
+
+            <VBox spacing="15">
+                <VBox spacing="10" styleClass="table-container">
+                    <Text text="Room Availability" styleClass="header-middle"/>
+                    <TableView fx:id="roomTableView" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="roomNumberColumn" text="Room Number" prefWidth="100"/>
+                            <TableColumn fx:id="roomCategoryColumn" text="Room Category" prefWidth="100"/>
+                            <TableColumn fx:id="roomStatusColumn" text="Status" prefWidth="100"/>
+                            <TableColumn fx:id="roomReservationNumberColumn" text="Reservation Number" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                    <Button text="Refresh" onAction="#handleRefreshRoomTable"
+                            styleClass="secondary-button"/>
+                </VBox>
+
+                <VBox spacing="10" styleClass="table-container">
+                    <Text text="Notifications" styleClass="header-middle"/>
+                    <TableView fx:id="notificationTableView" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="notificationMessageColumn" text="Message" prefWidth="250"/>
+                            <TableColumn fx:id="notificationCreatedAtColumn" text="Created At" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </HBox>
+
+        <HBox alignment="BOTTOM_RIGHT">
+            <Button text="Back" onAction="#handleGoBack" styleClass="secondary-button"/>
+        </HBox>
+    </VBox>
+</ScrollPane>
