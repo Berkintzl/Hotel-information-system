@@ -2,34 +2,58 @@ package DAO;
 
 import model.Room;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoomDAO {
     private final Connection connection;
+    private final DataSource dataSource;
 
     public RoomDAO(Connection connection) {
         this.connection = connection;
+        this.dataSource = null;
+    }
+
+    public RoomDAO(DataSource dataSource) {
+        this.connection = null;
+        this.dataSource = dataSource;
     }
 
     public List<Room> getAvailableRoomsByHotelId(int hotelId) throws SQLException {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT r.id, r.room_number, r.room_category, r.is_occupied, r.hotel_id, " +
-                "res.reservation_number " +  // Changed this line
+                "res.reservation_number " +
                 "FROM rooms r " +
                 "LEFT JOIN reservations res ON r.room_number = res.room_number AND res.is_cancelled = FALSE " +
                 "WHERE r.hotel_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, hotelId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String roomNumber = resultSet.getString("room_number");
-                    String roomCategory = resultSet.getString("room_category");
-                    boolean isOccupied = resultSet.getBoolean("is_occupied");
-                    String reservationNumber = resultSet.getString("reservation_number");
-                    rooms.add(new Room(id, roomCategory, isOccupied, roomNumber, hotelId, reservationNumber));
+        if (connection != null) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, hotelId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String roomNumber = resultSet.getString("room_number");
+                        String roomCategory = resultSet.getString("room_category");
+                        boolean isOccupied = resultSet.getBoolean("is_occupied");
+                        String reservationNumber = resultSet.getString("reservation_number");
+                        rooms.add(new Room(id, roomCategory, isOccupied, roomNumber, hotelId, reservationNumber));
+                    }
+                }
+            }
+        } else {
+            try (Connection conn = dataSource.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setInt(1, hotelId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String roomNumber = resultSet.getString("room_number");
+                        String roomCategory = resultSet.getString("room_category");
+                        boolean isOccupied = resultSet.getBoolean("is_occupied");
+                        String reservationNumber = resultSet.getString("reservation_number");
+                        rooms.add(new Room(id, roomCategory, isOccupied, roomNumber, hotelId, reservationNumber));
+                    }
                 }
             }
         }
