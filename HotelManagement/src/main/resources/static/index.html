@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Management Web UI</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Hotel Management</h1>
+
+    <section id="login-section">
+      <h2>Login</h2>
+      <div class="form-row">
+        <label>Username</label>
+        <input id="username" type="text" />
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input id="password" type="password" />
+      </div>
+      <button id="loginBtn">Log In</button>
+      <div id="loginStatus" class="status"></div>
+    </section>
+
+    <section id="session-section" class="hidden">
+      <h2>Session</h2>
+      <div class="form-row">
+        <label>Hotel ID</label>
+        <input id="hotelId" type="number" />
+      </div>
+      <div class="info-row">
+        <span id="sessionInfo"></span>
+        <button id="logoutBtn" class="secondary">Log Out</button>
+      </div>
+    </section>
+
+    <section id="rooms-section" class="hidden">
+      <h2>Rooms</h2>
+      <div class="form-grid">
+        <input id="roomNumber" placeholder="Room Number" />
+        <input id="roomCategory" placeholder="Category (Deluxe, Suite...)" />
+        <button id="addRoomBtn">Add Room</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Category</th>
+            <th>Occupied</th>
+            <th>Reservation</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="roomsTable"></tbody>
+      </table>
+      <div class="status" id="roomsStatus"></div>
+    </section>
+
+    <section id="reservations-section" class="hidden">
+      <h2>Reservations</h2>
+      <button id="loadReservationsBtn" class="secondary">Load Reservations</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Room</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Cancelled</th>
+          </tr>
+        </thead>
+        <tbody id="reservationsTable"></tbody>
+      </table>
+      <div class="status" id="reservationsStatus"></div>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
