@@ -2,35 +2,52 @@ package service;
 
 import DAO.ReservationDAO;
 import DAO.RoomDAO;
+import javax.sql.DataSource;
 import model.Reservation;
 import model.Room;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.sql.Connection;
 
 public class ReservationService {
     private final ReservationDAO reservationDAO;
     private final RoomDAO roomDAO;
+    private final DataSource dataSource;
 
-    public ReservationService(ReservationDAO reservationDAO, RoomDAO roomDAO) {
+    public ReservationService(ReservationDAO reservationDAO, RoomDAO roomDAO, DataSource dataSource) {
         this.reservationDAO = reservationDAO;
         this.roomDAO = roomDAO;
+        this.dataSource = dataSource;
     }
 
     public void addReservation(Reservation reservation) throws SQLException {
-        reservationDAO.createReservation(reservation);
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            ReservationDAO rdao = new ReservationDAO(conn);
+            RoomDAO roomDaoConn = new RoomDAO(conn);
+            rdao.createReservation(reservation);
+            roomDaoConn.setRoomReservation(reservation.getRoomNumber(), reservation.getReservationNumber(), true);
+            conn.commit();
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ignored) {}
+            }
+            throw e;
+        } finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException ignored) {}
+            }
+        }
     }
 
     public void cancelReservation(String reservationNumber, String cancellationType) throws SQLException {
         Reservation reservation = reservationDAO.getReservationByNumber(reservationNumber);
         if (reservation != null && !reservation.isCancelled()) {
             reservationDAO.cancelReservation(reservationNumber, cancellationType);
-            Room room = roomDAO.getRoomByRoomNumber(reservation.getRoomNumber());
-            if (room != null) {
-                room.setIsOccupied(false);
-                room.setReservationNumber(null);
-                roomDAO.updateRoomStatus(room.getRoomNumber(), false);
-            }
+            roomDAO.setRoomReservation(reservation.getRoomNumber(), null, false);
         }
     }
 

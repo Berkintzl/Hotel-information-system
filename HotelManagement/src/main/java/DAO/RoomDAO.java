@@ -76,6 +76,25 @@ public class RoomDAO {
             }
         }
     }
+
+    public void setRoomReservation(String roomNumber, String reservationNumber, boolean isOccupied) throws SQLException {
+        String sql = "UPDATE rooms SET is_occupied = ?, reservation_number = ? WHERE room_number = ?";
+        if (connection != null) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setBoolean(1, isOccupied);
+                if (reservationNumber == null) statement.setNull(2, Types.VARCHAR); else statement.setString(2, reservationNumber);
+                statement.setString(3, roomNumber);
+                statement.executeUpdate();
+            }
+        } else {
+            try (Connection conn = dataSource.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setBoolean(1, isOccupied);
+                if (reservationNumber == null) statement.setNull(2, Types.VARCHAR); else statement.setString(2, reservationNumber);
+                statement.setString(3, roomNumber);
+                statement.executeUpdate();
+            }
+        }
+    }
     public void createRoom(String roomNumber, String roomCategory, int hotelId) throws SQLException {
         String sql = "INSERT INTO rooms (room_number, room_category, is_occupied, hotel_id) VALUES (?, ?, false, ?)";
         if (connection != null) {

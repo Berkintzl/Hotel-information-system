@@ -109,4 +109,40 @@ public class UserDAO {
         }
         return users;
     }
+
+    public User getByUsername(String username) throws SQLException {
+        String sql = "SELECT u.*, r.role_name FROM User u JOIN UserRole r ON u.role_id = r.id WHERE u.username = ?";
+        if (connection != null) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String usernameDb = resultSet.getString("username");
+                        String password = resultSet.getString("password");
+                        int roleId = resultSet.getInt("role_id");
+                        int hotelId = resultSet.getInt("hotel_id");
+                        String roleName = resultSet.getString("role_name");
+                        return new User(id, usernameDb, password, roleId, hotelId, roleName);
+                    }
+                }
+            }
+        } else {
+            try (Connection conn = dataSource.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String usernameDb = resultSet.getString("username");
+                        String password = resultSet.getString("password");
+                        int roleId = resultSet.getInt("role_id");
+                        int hotelId = resultSet.getInt("hotel_id");
+                        String roleName = resultSet.getString("role_name");
+                        return new User(id, usernameDb, password, roleId, hotelId, roleName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

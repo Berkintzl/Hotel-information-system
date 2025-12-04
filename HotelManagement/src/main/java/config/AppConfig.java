@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import service.*;
 
 import javax.sql.DataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AppConfig {
@@ -34,8 +36,8 @@ public class AppConfig {
     public UserRoleDAO userRoleDAO(DataSource dataSource) { return new UserRoleDAO(dataSource); }
 
     @Bean
-    public ReservationService reservationService(ReservationDAO reservationDAO, RoomDAO roomDAO) {
-        return new ReservationService(reservationDAO, roomDAO);
+    public ReservationService reservationService(ReservationDAO reservationDAO, RoomDAO roomDAO, DataSource dataSource) {
+        return new ReservationService(reservationDAO, roomDAO, dataSource);
     }
 
     @Bean
@@ -53,15 +55,18 @@ public class AppConfig {
     public HotelService hotelService(HotelDAO hotelDAO) { return new HotelService(hotelDAO); }
 
     @Bean
-    public UserService userService(UserDAO userDAO, UserRoleDAO userRoleDAO, HotelDAO hotelDAO) {
-        return new UserService(userDAO, userRoleDAO, hotelDAO);
+    public UserService userService(UserDAO userDAO, UserRoleDAO userRoleDAO, HotelDAO hotelDAO, PasswordEncoder passwordEncoder) {
+        return new UserService(userDAO, userRoleDAO, hotelDAO, passwordEncoder);
     }
 
     @Bean
-    public AuthenticationService authenticationService(UserDAO userDAO) { return new AuthenticationService(userDAO); }
+    public AuthenticationService authenticationService(UserDAO userDAO, PasswordEncoder passwordEncoder) { return new AuthenticationService(userDAO, passwordEncoder); }
 
     @Bean(initMethod = "start")
     public NotificationService.NotificationScheduler notificationScheduler(NotificationService notificationService) {
         return new NotificationService.NotificationScheduler(notificationService);
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 }
