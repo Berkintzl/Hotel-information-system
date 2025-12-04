@@ -7,10 +7,8 @@ import javafx.event.ActionEvent;
 import model.AdditionalService;
 import model.User;
 import service.AdditionalServiceService;
-import utils.DatabaseConnection;
-import DAO.AdditionalServiceDAO;
+import org.example.SpringContextHolder;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AdditionalServiceController {
@@ -30,8 +28,7 @@ public class AdditionalServiceController {
 
     public void initialize() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
-            additionalServiceService = new AdditionalServiceService(new AdditionalServiceDAO(connection));
+            additionalServiceService = SpringContextHolder.getBean(AdditionalServiceService.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

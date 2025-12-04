@@ -21,7 +21,7 @@ import service.ClientRatingService;
 import service.AdditionalServiceService;
 import service.UserService;
 import service.HotelService;
-import utils.DatabaseConnection;
+import org.example.SpringContextHolder;
 import DAO.ClientDAO;
 import DAO.ClientRatingDAO;
 import DAO.AdditionalServiceDAO;
@@ -35,7 +35,6 @@ import model.AdditionalService;
 import model.User;
 import model.Room;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -91,13 +90,12 @@ public class OwnerPanelController {
 
     public void initialize() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
-            clientService = new ClientService(new ClientDAO(connection));
-            clientRatingService = new ClientRatingService(new ClientRatingDAO(connection));
-            additionalServiceService = new AdditionalServiceService(new AdditionalServiceDAO(connection));
-            userService = new UserService(new UserDAO(connection), new UserRoleDAO(connection), new HotelDAO(connection));
-            hotelService = new HotelService(new HotelDAO(connection));
-            roomDAO = new RoomDAO(connection);
+            clientService = SpringContextHolder.getBean(ClientService.class);
+            clientRatingService = SpringContextHolder.getBean(ClientRatingService.class);
+            additionalServiceService = SpringContextHolder.getBean(AdditionalServiceService.class);
+            userService = SpringContextHolder.getBean(UserService.class);
+            hotelService = SpringContextHolder.getBean(HotelService.class);
+            roomDAO = SpringContextHolder.getBean(RoomDAO.class);
 
             clientIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
             clientNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

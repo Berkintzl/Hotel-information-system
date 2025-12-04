@@ -12,9 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import service.AuthenticationService;
-import utils.DatabaseConnection;
+import org.example.SpringContextHolder;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -28,8 +27,7 @@ public class LoginController {
 
     public void initialize() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
-            authService = new AuthenticationService(new UserDAO(connection));
+            authService = SpringContextHolder.getBean(AuthenticationService.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

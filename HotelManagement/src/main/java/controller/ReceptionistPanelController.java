@@ -10,18 +10,14 @@ import javafx.util.Callback;
 import service.ReservationService;
 import service.ClientService;
 import service.NotificationService;
-import utils.DatabaseConnection;
-import DAO.ReservationDAO;
-import DAO.ClientDAO;
+import org.example.SpringContextHolder;
 import DAO.RoomDAO;
-import DAO.NotificationDAO;
 import model.Client;
 import model.Reservation;
 import model.Room;
 import model.User;
 import model.Notification;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -81,10 +77,9 @@ public class ReceptionistPanelController {
 
     public void initialize() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
-            clientService = new ClientService(new ClientDAO(connection));
-            reservationService = new ReservationService(new ReservationDAO(connection), new RoomDAO(connection));
-            notificationService = new NotificationService(new NotificationDAO(connection), new ReservationDAO(connection));
+            clientService = SpringContextHolder.getBean(ClientService.class);
+            reservationService = SpringContextHolder.getBean(ReservationService.class);
+            notificationService = SpringContextHolder.getBean(NotificationService.class);
 
             roomCategoryComboBox.setItems(FXCollections.observableArrayList(
                     "Standard",

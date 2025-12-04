@@ -18,12 +18,11 @@ import javafx.stage.Stage;
 import service.ReservationService;
 import service.UserService;
 import service.NotificationService;
-import utils.DatabaseConnection;
+import org.example.SpringContextHolder;
 import model.Reservation;
 import model.User;
 import model.Notification;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -83,10 +82,9 @@ public class ManagerController {
 
     public void initialize() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
-            userService = new UserService(new UserDAO(connection), new UserRoleDAO(connection), new HotelDAO(connection));
-            reservationService = new ReservationService(new ReservationDAO(connection), new RoomDAO(connection));
-            notificationService = new NotificationService(new NotificationDAO(connection), new ReservationDAO(connection));
+            userService = SpringContextHolder.getBean(UserService.class);
+            reservationService = SpringContextHolder.getBean(ReservationService.class);
+            notificationService = SpringContextHolder.getBean(NotificationService.class);
 
             reservationClientIdColumn.setCellValueFactory(new PropertyValueFactory<>("clientId"));
             reservationNumberColumn.setCellValueFactory(new PropertyValueFactory<>("reservationNumber"));
