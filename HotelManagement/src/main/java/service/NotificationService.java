@@ -54,7 +54,7 @@ public class NotificationService {
                         e.printStackTrace();
                     }
                 }
-            }, 0, 24 * 60 * 60 * 1000); // 24 saatte bir çalışır
+            }, 10_000, 24 * 60 * 60 * 1000);
         }
     }
 }

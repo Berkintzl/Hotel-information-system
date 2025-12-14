@@ -4,11 +4,12 @@ import DAO.RoomDAO;
 import model.Room;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.stream.Collectors;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -74,8 +75,18 @@ public class RoomRestController {
     }
 
     @DeleteMapping("/{roomNumber}")
-    public ResponseEntity<Void> delete(@PathVariable int hotelId, @PathVariable String roomNumber) throws SQLException {
-        roomDAO.deleteRoom(roomNumber);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> delete(@PathVariable int hotelId, @PathVariable String roomNumber) {
+        try {
+            roomDAO.deleteRoom(roomNumber);
+            return ResponseEntity.ok().build();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            return ResponseEntity.status(409).body("Cannot delete room: Room has reservations");
+        } catch (SQLException e) {
+            String msg = e.getMessage() != null ? e.getMessage() : "Failed to delete room";
+            if (msg.toLowerCase().contains("cannot delete room")) {
+                return ResponseEntity.status(409).body(msg);
+            }
+            return ResponseEntity.status(500).body("Failed to delete room");
+        }
     }
 }

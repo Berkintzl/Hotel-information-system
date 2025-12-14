@@ -40,4 +40,12 @@ public class UserService {
     public List<User> getReceptionistsByHotelId(int hotelId) throws SQLException {
         return userDAO.getUsersByHotelIdAndRoleId(hotelId, 4); // 4 receptionistin role_id'si
     }
+
+    public void createManager(String username, String password, int hotelId) throws SQLException {
+        createUserWithRole(username, password, "manager", hotelId);
+    }
+
+    public List<User> getManagersByHotelId(int hotelId) throws SQLException {
+        return userDAO.getUsersByHotelIdAndRoleId(hotelId, 3);
+    }
 }

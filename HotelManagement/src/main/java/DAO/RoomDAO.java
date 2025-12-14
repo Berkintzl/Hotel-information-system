@@ -27,7 +27,7 @@ public class RoomDAO {
                 "res.reservation_number " +
                 "FROM rooms r " +
                 "LEFT JOIN reservations res ON r.room_number = res.room_number AND res.is_cancelled = FALSE " +
-                "WHERE r.hotel_id = ?";
+                "WHERE r.hotel_id = ? AND r.is_occupied = FALSE";
         if (connection != null) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, hotelId);
@@ -114,14 +114,14 @@ public class RoomDAO {
         }
     }
     public void deleteRoom(String roomNumber) throws SQLException {
-        // First check if the room has any active reservations
-        String checkSql = "SELECT COUNT(*) FROM reservations WHERE room_number = ? AND is_cancelled = false";
+        // Prevent deletion if any reservation ever referenced this room (active or cancelled)
+        String checkSql = "SELECT COUNT(*) FROM reservations WHERE room_number = ?";
         if (connection != null) {
             try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
                 checkStmt.setString(1, roomNumber);
                 ResultSet rs = checkStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-                    throw new SQLException("Cannot delete room: Room has active reservations");
+                    throw new SQLException("Cannot delete room: Room has reservations");
                 }
             }
             // If no active reservations, proceed with deletion
@@ -136,7 +136,7 @@ public class RoomDAO {
                     checkStmt.setString(1, roomNumber);
                     ResultSet rs = checkStmt.executeQuery();
                     if (rs.next() && rs.getInt(1) > 0) {
-                        throw new SQLException("Cannot delete room: Room has active reservations");
+                        throw new SQLException("Cannot delete room: Room has reservations");
                     }
                 }
                 String sql = "DELETE FROM rooms WHERE room_number = ?";
@@ -161,7 +161,7 @@ public class RoomDAO {
                                 resultSet.getBoolean("is_occupied"),
                                 resultSet.getString("room_number"),
                                 hotelId,
-                                null
+                                resultSet.getString("reservation_number")
                         );
                         rooms.add(room);
                     }
@@ -178,7 +178,7 @@ public class RoomDAO {
                                 resultSet.getBoolean("is_occupied"),
                                 resultSet.getString("room_number"),
                                 hotelId,
-                                null
+                                resultSet.getString("reservation_number")
                         );
                         rooms.add(room);
                     }

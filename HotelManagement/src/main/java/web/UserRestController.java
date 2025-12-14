@@ -4,8 +4,8 @@ import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.UserService;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,6 +39,13 @@ public class UserRestController {
         public String password;
     }
 
+    public static class CreateManagerRequest {
+        @NotBlank
+        public String username;
+        @NotBlank
+        public String password;
+    }
+
     public static class UserResponse {
         public int id;
         public String username;
@@ -49,6 +56,12 @@ public class UserRestController {
     @PostMapping("/hotels/{hotelId}/receptionists")
     public ResponseEntity<Void> createReceptionist(@PathVariable int hotelId, @Valid @RequestBody CreateReceptionistRequest req) throws SQLException {
         userService.createReceptionist(req.username, req.password, hotelId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/hotels/{hotelId}/managers")
+    public ResponseEntity<Void> createManager(@PathVariable int hotelId, @Valid @RequestBody CreateManagerRequest req) throws SQLException {
+        userService.createManager(req.username, req.password, hotelId);
         return ResponseEntity.ok().build();
     }
 }

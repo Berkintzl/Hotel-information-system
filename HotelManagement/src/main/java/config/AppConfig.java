@@ -36,8 +36,16 @@ public class AppConfig {
     public UserRoleDAO userRoleDAO(DataSource dataSource) { return new UserRoleDAO(dataSource); }
 
     @Bean
+    public AdditionalServiceDAO additionalServiceDAO(DataSource dataSource) { return new AdditionalServiceDAO(dataSource); }
+
+    @Bean
     public ReservationService reservationService(ReservationDAO reservationDAO, RoomDAO roomDAO, DataSource dataSource) {
         return new ReservationService(reservationDAO, roomDAO, dataSource);
+    }
+
+    @Bean
+    public AdditionalServiceService additionalServiceService(AdditionalServiceDAO additionalServiceDAO) {
+        return new AdditionalServiceService(additionalServiceDAO);
     }
 
     @Bean

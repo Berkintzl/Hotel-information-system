@@ -7,6 +7,7 @@ import model.Reservation;
 import model.Room;
 
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.List;
 import java.sql.Connection;
 
@@ -21,7 +22,27 @@ public class ReservationService {
         this.dataSource = dataSource;
     }
 
+    public ReservationService(ReservationDAO reservationDAO, RoomDAO roomDAO) {
+        this.reservationDAO = reservationDAO;
+        this.roomDAO = roomDAO;
+        this.dataSource = null;
+    }
+
     public void addReservation(Reservation reservation) throws SQLException {
+        if (reservation.getReservationNumber() == null || reservation.getReservationNumber().trim().isEmpty()) {
+            reservation.setReservationNumber("R-" + reservation.getHotelId() + "-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+        }
+        if (reservation.getRoomCategory() == null || reservation.getRoomCategory().trim().isEmpty()) {
+            Room room = roomDAO.getRoomByRoomNumber(reservation.getRoomNumber());
+            if (room != null) {
+                reservation.setRoomCategory(room.getRoomCategory());
+            }
+        }
+        if (dataSource == null) {
+            reservationDAO.createReservation(reservation);
+            roomDAO.setRoomReservation(reservation.getRoomNumber(), reservation.getReservationNumber(), true);
+            return;
+        }
         Connection conn = null;
         try {
             conn = dataSource.getConnection();

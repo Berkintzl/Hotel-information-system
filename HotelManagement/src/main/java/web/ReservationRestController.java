@@ -1,12 +1,12 @@
 package web;
 
+import jakarta.validation.constraints.NotBlank;
 import model.Reservation;
 import model.Room;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import service.ReservationService;
 import java.util.stream.Collectors;
 
@@ -40,24 +40,19 @@ public class ReservationRestController {
     public static class CreateReservationRequest {
         @NotNull
         public Integer clientId;
-        @NotBlank
         public String reservationNumber;
-        @NotBlank
         public String roomNumber;
         public String cancellationType;
-        @NotBlank
         public String roomCategory;
         @NotNull
         public Date startDate;
         @NotNull
         public Date endDate;
-        @NotNull
-        public Integer hotelId;
     }
 
-    @PostMapping("/reservations")
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateReservationRequest req) throws SQLException {
-        Reservation r = new Reservation(0, req.clientId, req.reservationNumber, req.roomNumber, req.cancellationType, req.roomCategory, req.startDate, req.endDate, false, req.hotelId);
+    @PostMapping("/hotels/{hotelId}/reservations")
+    public ResponseEntity<Void> create(@PathVariable int hotelId, @Valid @RequestBody CreateReservationRequest req) throws SQLException {
+        Reservation r = new Reservation(0, req.clientId, req.reservationNumber, req.roomNumber, req.cancellationType, req.roomCategory, req.startDate, req.endDate, false, hotelId);
         reservationService.addReservation(r);
         return ResponseEntity.ok().build();
     }
@@ -73,10 +68,6 @@ public class ReservationRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/hotels/{hotelId}/rooms/available")
-    public List<Room> availableRooms(@PathVariable int hotelId) throws SQLException {
-        return reservationService.getAvailableRoomsByHotelId(hotelId);
-    }
 
     public static class ReservationResponse {
         public String reservationNumber;

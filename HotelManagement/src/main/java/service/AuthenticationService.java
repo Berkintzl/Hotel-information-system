@@ -19,8 +19,10 @@ public class AuthenticationService {
     public User authenticate(String username, String password) throws SQLException {
         User user = userDAO.getByUsername(username);
         if (user == null) return null;
-        if (passwordEncoder.matches(password, user.getPassword())) return user;
-        if (user.getPassword().equals(password)) return user;
+        String stored = user.getPassword();
+        boolean looksEncoded = stored != null && stored.startsWith("$2") && stored.length() >= 60;
+        if (looksEncoded && passwordEncoder.matches(password, stored)) return user;
+        if (stored != null && stored.equals(password)) return user;
         return null;
     }
 }
