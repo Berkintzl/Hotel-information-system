@@ -19,6 +19,19 @@ public class UserRestController {
         this.userService = userService;
     }
 
+    @GetMapping("/users")
+    public List<UserResponse> allUsers() throws SQLException {
+        List<User> users = userService.getAllUsers();
+        return users.stream().map(u -> {
+            UserResponse r = new UserResponse();
+            r.id = u.getId();
+            r.username = u.getUsername();
+            r.roleName = u.getRoleName();
+            r.hotelId = u.getHotelId();
+            return r;
+        }).collect(java.util.stream.Collectors.toList());
+    }
+
     @GetMapping("/hotels/{hotelId}/receptionists")
     public List<UserResponse> receptionists(@PathVariable int hotelId) throws SQLException {
         List<User> users = userService.getReceptionistsByHotelId(hotelId);
@@ -54,14 +67,26 @@ public class UserRestController {
     }
 
     @PostMapping("/hotels/{hotelId}/receptionists")
-    public ResponseEntity<Void> createReceptionist(@PathVariable int hotelId, @Valid @RequestBody CreateReceptionistRequest req) throws SQLException {
-        userService.createReceptionist(req.username, req.password, hotelId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> createReceptionist(@PathVariable int hotelId, @Valid @RequestBody CreateReceptionistRequest req) {
+        try {
+            userService.createReceptionist(req.username, req.password, hotelId);
+            return ResponseEntity.ok().build();
+        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            return ResponseEntity.status(409).body("Username already exists");
+        } catch (SQLException e) {
+            return ResponseEntity.status(500).body("Database error: " + e.getMessage());
+        }
     }
 
     @PostMapping("/hotels/{hotelId}/managers")
-    public ResponseEntity<Void> createManager(@PathVariable int hotelId, @Valid @RequestBody CreateManagerRequest req) throws SQLException {
-        userService.createManager(req.username, req.password, hotelId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> createManager(@PathVariable int hotelId, @Valid @RequestBody CreateManagerRequest req) {
+        try {
+            userService.createManager(req.username, req.password, hotelId);
+            return ResponseEntity.ok().build();
+        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            return ResponseEntity.status(409).body("Username already exists");
+        } catch (SQLException e) {
+            return ResponseEntity.status(500).body("Database error: " + e.getMessage());
+        }
     }
 }

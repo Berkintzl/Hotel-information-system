@@ -48,4 +48,8 @@ public class UserService {
     public List<User> getManagersByHotelId(int hotelId) throws SQLException {
         return userDAO.getUsersByHotelIdAndRoleId(hotelId, 3);
     }
+
+    public List<User> getAllUsers() throws SQLException {
+        return userDAO.getAllUsers();
+    }
 }

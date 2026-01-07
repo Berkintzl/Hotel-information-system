@@ -38,12 +38,13 @@ CREATE TABLE IF NOT EXISTS clientratings (
 
 CREATE TABLE IF NOT EXISTS rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  room_number VARCHAR(50) NOT NULL UNIQUE,
+  room_number VARCHAR(50) NOT NULL,
   room_category VARCHAR(255) NOT NULL,
   is_occupied BOOLEAN NOT NULL DEFAULT FALSE,
   hotel_id INT NOT NULL,
   reservation_number VARCHAR(255),
-  FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
+  FOREIGN KEY (hotel_id) REFERENCES Hotel(id),
+  UNIQUE KEY unique_room_per_hotel (room_number, hotel_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS reservations (

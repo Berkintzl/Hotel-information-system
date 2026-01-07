@@ -114,14 +114,14 @@ public class RoomDAO {
         }
     }
     public void deleteRoom(String roomNumber) throws SQLException {
-        // Prevent deletion if any reservation ever referenced this room (active or cancelled)
-        String checkSql = "SELECT COUNT(*) FROM reservations WHERE room_number = ?";
+        // Prevent deletion if any ACTIVE reservation exists (cancelled reservations don't count)
+        String checkSql = "SELECT COUNT(*) FROM reservations WHERE room_number = ? AND is_cancelled = FALSE";
         if (connection != null) {
             try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
                 checkStmt.setString(1, roomNumber);
                 ResultSet rs = checkStmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
-                    throw new SQLException("Cannot delete room: Room has reservations");
+                    throw new SQLException("Cannot delete room: Room has active reservations");
                 }
             }
             // If no active reservations, proceed with deletion
@@ -136,7 +136,7 @@ public class RoomDAO {
                     checkStmt.setString(1, roomNumber);
                     ResultSet rs = checkStmt.executeQuery();
                     if (rs.next() && rs.getInt(1) > 0) {
-                        throw new SQLException("Cannot delete room: Room has reservations");
+                        throw new SQLException("Cannot delete room: Room has active reservations");
                     }
                 }
                 String sql = "DELETE FROM rooms WHERE room_number = ?";

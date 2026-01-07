@@ -61,7 +61,6 @@ public class ReservationServiceTest {
         // Get reservations for a specific hotel
         List<Reservation> hotelReservations = reservationService.getReservationsByHotelId(1);
 
-        // Print reservation details
         System.out.println("Number of hotel reservations: " + hotelReservations.size());
         for(Reservation res : hotelReservations) {
             System.out.println("Reservation No: " + res.getReservationNumber()
@@ -69,7 +68,6 @@ public class ReservationServiceTest {
                     + ", Cancellation Status: " + (res.isCancelled() ? "Cancelled" : "Active"));
         }
 
-        // Verify all reservations belong to the correct hotel
         for(Reservation res : hotelReservations) {
             assertEquals(1, res.getHotelId());
         }
@@ -79,7 +77,6 @@ public class ReservationServiceTest {
     void testRoomCategoryValidation() throws SQLException {
         List<Room> rooms = roomDAO.getAllRooms();
 
-        // Validate room categories
         for(Room room : rooms) {
             String category = room.getRoomCategory();
             assertNotNull(category, "Room category cannot be null");
