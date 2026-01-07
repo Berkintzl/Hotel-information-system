@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS User (
   username VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role_id INT NOT NULL,
-  hotel_id INT NOT NULL,
+  hotel_id INT,
   FOREIGN KEY (role_id) REFERENCES UserRole(id),
   FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
 ) ENGINE=InnoDB;
@@ -27,14 +27,6 @@ CREATE TABLE IF NOT EXISTS clients (
   FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS clientratings (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  client_id INT NOT NULL,
-  rating INT NOT NULL,
-  hotel_id INT NOT NULL,
-  FOREIGN KEY (client_id) REFERENCES clients(id),
-  FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
-) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -63,19 +55,4 @@ CREATE TABLE IF NOT EXISTS reservations (
   FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS notifications (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  hotel_id INT NOT NULL,
-  message VARCHAR(1000) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
-) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS additionalservices (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  service_type VARCHAR(255) NOT NULL,
-  season VARCHAR(255) NOT NULL,
-  usage_count INT NOT NULL,
-  hotel_id INT NOT NULL,
-  FOREIGN KEY (hotel_id) REFERENCES Hotel(id)
-) ENGINE=InnoDB;

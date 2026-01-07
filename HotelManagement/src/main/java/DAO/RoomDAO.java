@@ -113,36 +113,39 @@ public class RoomDAO {
             }
         }
     }
-    public void deleteRoom(String roomNumber) throws SQLException {
-        // Prevent deletion if any ACTIVE reservation exists (cancelled reservations don't count)
-        String checkSql = "SELECT COUNT(*) FROM reservations WHERE room_number = ? AND is_cancelled = FALSE";
+    public void deleteRoom(String roomNumber, int hotelId) throws SQLException {
+        // First, delete ALL reservations associated with this room (Force delete)
+        String deleteReservationsSql = "DELETE FROM reservations WHERE room_number = ? AND hotel_id = ?";
+        
+        // Then delete the room itself
+        String deleteRoomSql = "DELETE FROM rooms WHERE room_number = ? AND hotel_id = ?";
+
         if (connection != null) {
-            try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
-                checkStmt.setString(1, roomNumber);
-                ResultSet rs = checkStmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    throw new SQLException("Cannot delete room: Room has active reservations");
-                }
+            // Delete reservations
+            try (PreparedStatement stmt = connection.prepareStatement(deleteReservationsSql)) {
+                stmt.setString(1, roomNumber);
+                stmt.setInt(2, hotelId);
+                stmt.executeUpdate();
             }
-            // If no active reservations, proceed with deletion
-            String sql = "DELETE FROM rooms WHERE room_number = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, roomNumber);
-                statement.executeUpdate();
+            // Delete room
+            try (PreparedStatement stmt = connection.prepareStatement(deleteRoomSql)) {
+                stmt.setString(1, roomNumber);
+                stmt.setInt(2, hotelId);
+                stmt.executeUpdate();
             }
         } else {
             try (Connection conn = dataSource.getConnection()) {
-                try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
-                    checkStmt.setString(1, roomNumber);
-                    ResultSet rs = checkStmt.executeQuery();
-                    if (rs.next() && rs.getInt(1) > 0) {
-                        throw new SQLException("Cannot delete room: Room has active reservations");
-                    }
+                // Delete reservations
+                try (PreparedStatement stmt = conn.prepareStatement(deleteReservationsSql)) {
+                    stmt.setString(1, roomNumber);
+                    stmt.setInt(2, hotelId);
+                    stmt.executeUpdate();
                 }
-                String sql = "DELETE FROM rooms WHERE room_number = ?";
-                try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                    statement.setString(1, roomNumber);
-                    statement.executeUpdate();
+                // Delete room
+                try (PreparedStatement stmt = conn.prepareStatement(deleteRoomSql)) {
+                    stmt.setString(1, roomNumber);
+                    stmt.setInt(2, hotelId);
+                    stmt.executeUpdate();
                 }
             }
         }

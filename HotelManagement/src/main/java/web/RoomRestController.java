@@ -77,7 +77,7 @@ public class RoomRestController {
     @DeleteMapping("/{roomNumber}")
     public ResponseEntity<String> delete(@PathVariable int hotelId, @PathVariable String roomNumber) {
         try {
-            roomDAO.deleteRoom(roomNumber);
+            roomDAO.deleteRoom(roomNumber, hotelId);
             return ResponseEntity.ok().build();
         } catch (SQLIntegrityConstraintViolationException e) {
             return ResponseEntity.status(409).body("Cannot delete room: Room has reservations");
