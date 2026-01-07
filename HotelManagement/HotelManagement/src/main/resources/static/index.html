@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Management System</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+  <!-- Welcome/Login Screen (shown before login) -->
+  <div id="welcome-screen" class="welcome-screen">
+    <div class="welcome-container">
+      <div class="welcome-header">
+        <h1> Hotel Management System</h1>
+        <p>Manage your hotel operations efficiently</p>
+      </div>
+
+      <!-- Login Section -->
+      <section id="login-section" class="auth-card">
+        <h2>Login</h2>
+        <div class="form-row">
+          <label>Username</label>
+          <input id="username" type="text" placeholder="Enter your username" />
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="Enter your password" />
+        </div>
+        <button id="loginBtn" class="btn btn-primary btn-block">Log In</button>
+        <div id="loginStatus" class="status"></div>
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="#" id="showRegisterLink">Register as Owner</a></p>
+        </div>
+      </section>
+
+      <!-- Register Section -->
+      <section id="register-section" class="auth-card hidden">
+        <h2>Owner Registration</h2>
+        <div class="form-row">
+          <label>Hotel Name</label>
+          <input id="regHotelName" type="text" placeholder="Enter hotel name" />
+        </div>
+        <div class="form-row">
+          <label>Hotel Address</label>
+          <input id="regHotelAddress" type="text" placeholder="Enter hotel address" />
+        </div>
+        <div class="form-row">
+          <label>Username</label>
+          <input id="regUsername" type="text" placeholder="Choose a username" />
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input id="regPassword" type="password" placeholder="Choose a password" />
+        </div>
+        <button id="signupOwnerBtn" class="btn btn-primary btn-block">Sign Up as Owner</button>
+        <div id="registerStatus" class="status"></div>
+        <div class="auth-footer">
+          <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Main Application (shown after login) -->
+  <div id="main-app" class="container hidden">
+    <div class="app-header">
+      <h1>Hotel Management</h1>
+      <div class="user-info">
+        <span id="sessionInfo"></span>
+        <button id="logoutNavBtn" class="btn btn-secondary">Logout</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside id="sidebar" class="sidebar">
+        <button id="navRoomsBtn" class="btn btn-outline" data-view="rooms" type="button">Rooms</button>
+        <button id="navReservationsBtn" class="btn btn-outline" data-view="reservations"
+          type="button">Reservations</button>
+        <button id="navManagersBtn" class="btn btn-outline" data-view="managers" type="button">Managers</button>
+        <button id="navReceptionistsBtn" class="btn btn-outline" data-view="receptionists"
+          type="button">Receptionists</button>
+      </aside>
+
+      <div class="content">
+        <!-- Session Section (only for admin to select hotel) -->
+        <section id="session-section" class="hidden">
+          <div class="form-row">
+            <label>Hotel</label>
+            <input id="hotelId" type="number" />
+            <select id="hotelSelect" class="hidden"></select>
+          </div>
+        </section>
+
+        <!-- Rooms Section -->
+        <section id="rooms-section" class="hidden">
+          <h2>Rooms</h2>
+          <div class="form-grid">
+            <input id="roomNumber" placeholder="Room Number" />
+            <input id="roomCategory" placeholder="Category (Deluxe, Suite...)" />
+            <button id="addRoomBtn" class="btn btn-primary">Add Room</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Number</th>
+                <th>Category</th>
+                <th>Occupied</th>
+                <th>Reservation</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="roomsTable"></tbody>
+          </table>
+          <div class="status" id="roomsStatus"></div>
+        </section>
+
+        <!-- Reservations Section -->
+        <section id="reservations-section" class="hidden">
+          <h2>Reservations</h2>
+          <button id="loadReservationsBtn" class="btn btn-secondary">Load Reservations</button>
+          <div class="form-grid">
+            <input id="clientNameInput" list="clientList" placeholder="Client Name" />
+            <datalist id="clientList"></datalist>
+            <select id="resRoomSelect"></select>
+            <input id="startDate" type="date" />
+            <input id="endDate" type="date" />
+            <button id="createReservationBtn" class="btn btn-primary">Create Reservation</button>
+          </div>
+          <div class="form-grid">
+            <input id="clientNameAdd" placeholder="Client Name" />
+            <input id="clientEmail" placeholder="Client Email" />
+            <button id="addClientBtn" class="btn btn-primary">Add Client</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTable"></tbody>
+          </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Room</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Cancelled</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsTable"></tbody>
+          </table>
+          <div class="status" id="reservationsStatus"></div>
+        </section>
+
+        <!-- Managers Section -->
+        <section id="managers-section" class="hidden">
+          <h2>Managers</h2>
+          <div id="managerGrid" class="form-grid">
+            <input id="managerUsername" placeholder="Manager Username" />
+            <input id="managerPassword" type="password" placeholder="Manager Password" />
+            <button id="addManagerBtn" class="btn btn-primary">Add Manager</button>
+          </div>
+          <div id="managerStatus" class="status"></div>
+        </section>
+
+        <!-- Receptionists Section -->
+        <section id="receptionists-section" class="hidden">
+          <h2>Receptionists</h2>
+          <div id="recGrid" class="form-grid">
+            <input id="recUsername" placeholder="Receptionist Username" />
+            <input id="recPassword" type="password" placeholder="Receptionist Password" />
+            <button id="addReceptionistBtn" class="btn btn-primary">Add Receptionist</button>
+          </div>
+          <div id="recStatus" class="status"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+
+</html>
